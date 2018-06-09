@@ -40,7 +40,7 @@ Part of the Library/Framework used for this project :
 In order to run this app in a docker :
 ```sh
 cd WatchMyFiles
-docker build -t <your username>/whatchmyfiles-app .
+docker build -t <your username>/watchmyfiles-app .
 ```
 
 You can then start the docker image with (You can change the port in the file watchmyfile-docker) :
