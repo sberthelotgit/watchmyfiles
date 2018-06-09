@@ -4,40 +4,40 @@ Watch my file is a simple folder listener allowing user to identify which file h
 
 In future, it will also provide additional information depending on the type of file : ( can also
 
-  - Movie's IMBD information
-  - Book ISBNdb information
-  - ...
+- Movie's IMBD information
+- Book ISBNdb information
+- ...
 
-### Information
+## Information
 
-  - This application contains a back-end and front-end part : 
-    - Back-End will watch local or network folder in order to fill a database (mongo)
-    - Front-end will show found file on the server to bring informations and allow user to mark them as watched
+- This application contains a back-end and front-end part :
+  - Back-End will watch local or network folder in order to fill a database (mongo)
+  - Front-end will show found file on the server to bring informations and allow user to mark them as watched
 
+## Installation
 
-### Installation 
 - Back-End :
-    - Use environnement variable 'FOLDERS' to define folder to watch 
-        - i.e. : config:set FOLDERS="/data/movies,/data/pictures,/data/books"
-    - Use environnement variable 'DB' to configure mongo database URL
+  - Use environnement variable 'FOLDERS' to define folder to watch
+    - i.e. : config:set FOLDERS="/data/movies,/data/pictures,/data/books"
+  - Use environnement variable 'DB' to configure mongo database URL
 
 - Front-End
-    - TBD 
- 
+  - TBD
 
-### Tech
+## Tech
 
 Part of the Library/Framework used for this project :
 
-* [Mongo] Free and open-source cross-platform document-oriented database
-* [Express] - Web Application framework for nodejs
-* [Angular] - TypeScript-based open-source front-end web application platform
-* [Nodejs] - JavaScript run-time environment (For back-end I/O)
-* [Angular Material] - Web Component library for Angular based application
+- [Mongo] Free and open-source cross-platform document-oriented database
+- [Express] - Web Application framework for nodejs
+- [Angular] - TypeScript-based open-source front-end web application platform
+- [Nodejs] - JavaScript run-time environment (For back-end I/O)
+- [Angular Material] - Web Component library for Angular based application
 
+## Docker
 
-### Docker
 In order to run this app in a docker :
+
 ```sh
 cd WatchMyFiles
 docker build -t <your username>/watchmyfiles-app .
@@ -49,16 +49,15 @@ You can then start the docker image with (You can change the port in the file wa
 docker run -p 49160:8080 -d <your username>/node-web-app
 ```
 
+## Todos
 
-### Todos
+- Everything...
 
- - Everthing...
+## License
 
-License
 ----
 
 MIT
-
 
 [//]: #
 [gitrepo]: <https://github.com/joemccann/dillinger.git>
@@ -68,4 +67,3 @@ MIT
 [nodejs]: <http://nodejs.org>
 [angular material]: <https://material.angular.io/>
   
-   
