@@ -51,7 +51,9 @@ function findAllFiles() {
             return addFileFromFolder(folder, filesPath);
         });
 
-        Promise.all(promisesFolder).then(() => resolve(filesPath));
+        Promise.all(promisesFolder)
+        .then(() => resolve(filesPath))
+        .catch(error => winston.error(error));
     });
 }
 
@@ -64,6 +66,10 @@ async function addFileFromFolder(folder, array) {
     return new Promise((resolve, reject) => {
         winston.debug(`Loading folder ${folder}`);
         fs.readdir(folder, (error, files) => {
+            if (error) {
+                reject(error);
+                return;
+            }
             if (files.length === 0 ) {
                 resolve();
             } else {

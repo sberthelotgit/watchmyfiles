@@ -1,2 +1,4 @@
+/node_modules
 watchmyfiles.code-workspace
-uncaughtExceptions.log
+*.log
+data/
