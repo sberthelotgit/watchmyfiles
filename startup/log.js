@@ -26,4 +26,8 @@ module.exports = () => {
         db: config.get('db.url'),
         level: 'info',
     });
+
+    if (process.env.NODE_ENV === 'development') {
+        winston.level='debug';
+    };
 };

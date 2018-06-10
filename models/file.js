@@ -5,10 +5,13 @@ const _ = require('lodash');
 
 
 const fileSchema = new mongoose.Schema({
-    fileName: String,
-    folder: String,
+    fileName: {'type': String, 'required': true},
+    folder: {'type': String, 'required': true},
     dateCreation: Date,
 });
+
+fileSchema.index({'fileName': 1, 'folder': 1}, {'unique': true});
+
 
 const File = mongoose.model('File', fileSchema);
 
@@ -36,12 +39,18 @@ function validate(file) {
 async function saveAllFileIfNotExist(files) {
     return new Promise(async (resolve, reject) => {
         winston.debug(`File to save : ${files}`);
+        // Lookup for existing file in BD
+        // TODO Optimise to only deal with recently created files (creationDate > max date in BD)
         const query = File.find();
         query.select('fileName folder');
         const result = await query.exec();
+
+        // Removing existing file fron the found file list
         _.forEach(result, dbFile => {
             _.remove(files, file => file.folder === dbFile.folder && file.fileName === dbFile.fileName);
         });
+
+        // Saving only new files
         const savedFiles = _.map(files, file => File.create(file));
         winston.debug(`File saved in BD : ${savedFiles}`);
         Promise.all(savedFiles).then(()=> resolve(savedFiles));
