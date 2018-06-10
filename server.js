@@ -7,9 +7,9 @@ const fileChecker = require('./schedule/filechecker');
 require('./startup/log')();
 
 // Db Component
-const dbPromise = require('./startup/db');
+const db = require('./startup/db');
 
-dbPromise.then(async () => {
+db.then(async () => {
     winston.info('Starting file checker');
     await fileChecker.loadAllFile();
     fileChecker.startScheduler();

@@ -2,31 +2,49 @@ const config = require('config');
 const winston = require('winston');
 const fs = require('fs');
 const _ = require('lodash');
+const fileModel = require('../models/file');
 
-
+/**
+ * @return Promise<String[]> allTheFile of the configured folder
+ */
 module.exports.loadAllFile = () => {
     return new Promise((resolve, reject) => {
         // Grab folder paths from config
-        folders = config.get('FOLDERS').split(',');
+        // Save in BD once all folder has been processed
+        findAllFiles()
+            .then(allFiles => fileModel.saveAllFileIfNotExist(filesPath))
+            .then(fileInBd => resolve(filesPath));
+    });
+};
 
-        // Find All files from all folder
+module.exports.startScheduler = function() {
+    let date = new Date();
+    setInterval(() => {
+        findAllFiles().then(allFiles => {
+            const filteredByDateFiles = _.filter(allFiles, file => {
+                return file.dateCreation > date;
+            });
+            fileModel.saveAllFileIfNotExist(filteredByDateFiles);
+            date = new Date();
+        });
+    }, 15000);
+};
+
+/**
+ * @return {String[]} array of files
+ */
+function findAllFiles() {
+    return new Promise((resolve, reject) => {
+        folders = config.get('FOLDERS').split(',');
+        // Find All files meta from all folder
         filesPath = [];
         promisesFolder = _.map(folders, folder => {
             return addFileFromFolder(folder, filesPath);
         });
 
-        Promise.all(promisesFolder).then(saveAllFile(filesPath)).then(() => {
-            winston.debug(`File loading over ${filesPath}`);
-            resolve(filesPath);
-        });
+        Promise.all(promisesFolder).then(() => resolve(filesPath));
     });
-};
-
-module.exports.startScheduler = function() {
-    setInterval(() => {
-        // TODO Load new files if exist
-    }, 300000);
-};
+}
 
 /**
  * @param {String} folder Folder path
@@ -35,17 +53,28 @@ module.exports.startScheduler = function() {
  */
 async function addFileFromFolder(folder, array) {
     return new Promise((resolve, reject) => {
-        winston.info(`Loading folder ${folder}`);
+        winston.debug(`Loading folder ${folder}`);
         fs.readdir(folder, (error, files) => {
-            files.forEach(async (fileName, index) => {
-                winston.info(`Filefound ${folder}${fileName}`);
-
-                const fileStat = await getFileObject(folder, fileName);
-                array.push(fileStat);
-                if (index == files.length - 1) {
-                    resolve();
-                }
-            });
+            if (files.length === 0 ) {
+                resolve();
+            } else {
+                files.forEach(async (fileName, index) => {
+                    const fileStat = await getFileStat(folder, fileName);
+                    if (fileStat.isDirectory()) {
+                       await addFileFromFolder(folder + fileName + '/', array);
+                    } else {
+                        winston.debug(`Filefound ${folder}${fileName}`);
+                        array.push({
+                            folder,
+                            fileName,
+                            dateCreation: fileStat.birthtime,
+                        });
+                    }
+                    if (index == files.length - 1) {
+                        resolve();
+                    }
+                });
+            }
         });
     });
 }
@@ -57,27 +86,14 @@ async function addFileFromFolder(folder, array) {
  * @param {*} fileName File name without path
  * @return {Promise} the file object promise
  */
-function getFileObject(folder, fileName) {
+function getFileStat(folder, fileName) {
     return new Promise((resolve, reject) => {
-        fs.stat(folder + fileName, (error, fileStat) =>{
+        fs.stat(folder + fileName, (error, fileStat) => {
             if (error) {
                 reject(error);
             }
             fileStat.isDirectory();
-            resolve({folder, fileName, dateCreate: fileStat.birthtime});
+            resolve(fileStat);
         });
-    });
-}
-
-
-/**
- * Save all the file in the mongo database
- * @param {*} files
- * @return {Promise} The saved files promise
- */
-function saveAllFile(files) {
-    return new Promise((resolve, reject) => {
-        // TODO
-        resolve();
     });
 }
