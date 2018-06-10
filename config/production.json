@@ -1,0 +1,6 @@
+{
+    "name":"What My Files App - Production",
+    "db":{
+        "url": "mongodb://localhost/wmf_production"
+    }       
+}
