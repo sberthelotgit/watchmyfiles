@@ -1,0 +1,10 @@
+<mat-accordion multi="true" *ngIf="files.length >0">
+  <mat-expansion-panel *ngFor="let file of files">
+    <mat-expansion-panel-header>
+        {{file.fileName}}
+    </mat-expansion-panel-header>
+    <p>{{file.folder}}</p>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<p *ngIf="files.length === 0" class="mat-body-strong not-found-text"> No files found </p>
