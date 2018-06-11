@@ -1,6 +1,6 @@
 {
-  "name": "watchmyfiles",
-  "version": "1.0.0",
+  "name": "watchmyfiles-server",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
