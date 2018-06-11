@@ -8,6 +8,13 @@ const home = require('../routes/home');
  */
 module.exports = function(app) {
     app.use(json());
+    app.use(corsAllowing);
     app.use('/api/files', files);
     app.use('/', home);
+};
+
+const corsAllowing = function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
 };
