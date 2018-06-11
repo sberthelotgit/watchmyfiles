@@ -1,6 +1,6 @@
 {
     "name":"What My Files App - Development",
-    "FOLDERS": "/home/sberthelot/DEV/node/watchmyfiles/data/movies2017/,/home/sberthelot/DEV/node/watchmyfiles/data/movies2018/",
+    "FOLDERS": "./data/movies2017/,./data/movies2018/",
     "db":{
         "url": "mongodb://localhost/wmf_development"        
     }       
