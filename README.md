@@ -51,7 +51,14 @@ docker run -p 49160:8080 -d <your username>/node-web-app
 
 ## Todos
 
-- Everything...
+- Add support for smb storage
+- Use file library to improve directory browsing
+- Add movie, books api integration (Store information in mongo?)
+- Improve angular view to show api information
+- Add error handling
+- Add test...
+- Add possibility to mark files as Viewed or Read
+- Add authentication for file read or viewed per profile
 
 ## License
 
