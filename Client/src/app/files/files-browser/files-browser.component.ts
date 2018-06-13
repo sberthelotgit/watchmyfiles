@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 export class FilesBrowserComponent implements OnInit, OnDestroy {
   files: File[] = [];
   private filesSub: Subscription;
+  objectKeys = (o) => Object.keys(o);
   constructor(public filesService: FilesService) {}
 
   ngOnInit() {

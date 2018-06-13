@@ -1,9 +1,9 @@
-<mat-accordion multi="true" *ngIf="files.length >0">
+<mat-accordion *ngIf="files.length >0">
   <mat-expansion-panel *ngFor="let file of files">
     <mat-expansion-panel-header>
         {{file.fileName}}
     </mat-expansion-panel-header>
-    <p>{{file.folder}}</p>
+    <p *ngFor="let key of objectKeys(file)">{{key + ' : ' + file[key]}}</p>
   </mat-expansion-panel>
 </mat-accordion>
 
