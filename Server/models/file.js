@@ -2,12 +2,53 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const winston = require('winston');
 const _ = require('lodash');
+const imdbApi = require('../api/imbd');
 
 
 const fileSchema = new mongoose.Schema({
     fileName: {'type': String, 'required': true},
     folder: {'type': String, 'required': true},
     dateCreation: Date,
+    apiCalled: {'type': Boolean, 'default': false},
+    Year: String,
+    Runtime: String,
+    Genre: String,
+    Director: String,
+    Writer: String,
+    Actors: String,
+    Plot: String,
+    Language: String,
+    Country: String,
+    Awards: String,
+    Poster: String,
+    Metascore: String,
+    imdbRating: String,
+    imdbID: String,
+    Type: String,
+    BoxOffice: String,
+    Production: String,
+    Website: String,
+});
+
+fileSchema.pre('save', true, function(next, done) {
+    winston.info('post create called');
+    if (!this.apiCalled) {
+        this.apiCalled = true;
+        // this.save();
+           imdbApi.getImbdInfo(this.fileName).then(metadata => {
+               console.log(`updating meta : ${metadata}`);
+            //    this.Runtime = metadata.Runtime;
+               _.extend(this, metadata);
+               this.apiCalled = true;
+               next();
+               done();
+        }).catch(message => {
+            console.log(`Error updating movie ${this.fileName} : ${message}`);
+            this.apiCalled = true;
+            next();
+            done();
+        });
+    }
 });
 
 fileSchema.index({'fileName': 1, 'folder': 1}, {'unique': true});
@@ -19,7 +60,7 @@ const File = mongoose.model('File', fileSchema);
 /**
  *
  * @param {*} file
- * @return {{x : Boolean}}
+ * @return {{x: Boolean}}
  */
 function validate(file) {
     // Schema for post and put validation
